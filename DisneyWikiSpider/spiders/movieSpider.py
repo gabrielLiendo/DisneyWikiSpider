@@ -17,6 +17,8 @@ class MovieSpider(scrapy.Spider):
         l = ItemLoader(Movie(), response)
 
         l.add_xpath('director', '//div[@data-source="director"]/div/descendant::text()')
+        l.add_xpath('studio', '//div[@data-source="studio"]/div/descendant::text()')
+        l.add_xpath('year', '//div[@data-source="release"]/div/descendant::text()')
         l.add_xpath('duration', '//div[@data-source="time"]/div/text()')
         
         #Redirect to IMDB

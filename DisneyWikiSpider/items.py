@@ -15,6 +15,14 @@ def filter_minutes(time):
     m = re.search('[0-9]+', time)
     return m.group()
 
+def filter_year(release_date):
+    m = re.search('\d{4}', release_date)
+    if m is None:
+        return None
+    else:
+        return m.group()
+    
+
 class Movie(scrapy.Item):
     title = scrapy.Field(
         output_processor=TakeFirst()
@@ -27,11 +35,16 @@ class Movie(scrapy.Item):
     parental_guide = scrapy.Field(
         output_processor=TakeFirst()
     )
+    studio = scrapy.Field()
     imdb_rating = scrapy.Field(
         output_processor=TakeFirst()
     )
     duration = scrapy.Field(
         input_processor=MapCompose(filter_minutes),
+        output_processor=TakeFirst()
+    )
+    year = scrapy.Field(
+        input_processor=MapCompose(filter_year),
         output_processor=TakeFirst()
     )
     genres = scrapy.Field()
