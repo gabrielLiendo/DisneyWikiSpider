@@ -20,6 +20,8 @@ class MovieSpider(scrapy.Spider):
         l.add_xpath('studio', '//div[@data-source="studio"]/div/descendant::text()')
         l.add_xpath('year', '//div[@data-source="release"]/div/descendant::text()')
         l.add_xpath('duration', '//div[@data-source="time"]/div/text()')
+        l.add_xpath('gross_revenue', '//div[@data-source="gross"]/div/text()')
+        l.add_xpath('cast', '//span[@id="Cast"]/../following-sibling::ul/li/descendant::text()')
         
         #Redirect to IMDB
         imdb_link = response.xpath('//td[@data-source="imdb_id"]/span/a/@href').get()
