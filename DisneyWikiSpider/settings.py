@@ -91,3 +91,4 @@ LOG_LEVEL = 'INFO'
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+FEED_EXPORT_FIELDS=['title', 'original_title', 'parental_guide', 'director', 'rating', 'genres', 'duration']
