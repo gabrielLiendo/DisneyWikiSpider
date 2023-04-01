@@ -5,8 +5,12 @@
 
 import scrapy
 
-
-class DisneyspiderItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
+class Movie(scrapy.Item):
+    title = scrapy.Field()
+    original_title = scrapy.Field()
+    director = scrapy.Field()
+    classification = scrapy.Field()
+    rating = scrapy.Field()
+    time = scrapy.Field()
+    genres = scrapy.Field()
     pass

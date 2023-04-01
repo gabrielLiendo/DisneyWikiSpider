@@ -1,4 +1,6 @@
 import scrapy
+from scrapy.loader import ItemLoader
+from ..items import Movie
 
 class MovieSpider(scrapy.Spider):
     name = 'moviespider'
@@ -11,52 +13,30 @@ class MovieSpider(scrapy.Spider):
                 continue
             yield scrapy.Request('https://disney.fandom.com' + link, callback=self.parse_movie)
             
-    def parse_movie(self, response):
+    def parse_movie(self, response):        
         #Check for infobox
-        aside = response.css('.portable-infobox')
+        aside = response.xpath('//aside[contains(@class, "portable-infobox")]')
         if aside is None:
             return
         
-        #Construct Movie JSON
-        movie = {}
-        
-        #Title
-        movie['title'] = aside.css('h2[data-source="name"] *::text').get()
-
-        #Director
-        movie['director'] = aside.xpath('.//div[@data-source="director"]/div/descendant::text()').get()
-        
-        #Duration
-        time = aside.css('div[data-source="time"] div::text').re_first('[0-9]+')
-        if time:  
-            movie['time'] = time
+        l = ItemLoader(Movie(), response)
+        l.add_xpath('title', '//h2[@data-source="name"]/descendant::text()')
+        l.add_xpath('director', '//div[@data-source="director"]/div/descendant::text()')
+        l.add_xpath('time', '//div[@data-source="time"]/div/text()')
             
-        #IMDB
+        #Redirect to IMDB
         imdb_link = aside.css('td[data-source="imdb_id"] a::attr(href)').get()
         
-        if(imdb_link is not None):
-            yield scrapy.Request(imdb_link, callback=self.parse_imdb, meta={'movie': movie})
-        else: 
-            yield movie
+        if imdb_link is not None:
+            yield scrapy.Request(imdb_link, callback=self.parse_imdb, meta={'movie': l.load_item()})
         
     def parse_imdb(self, response):
-        movie = response.meta['movie']
-        
-        #Data in header
-        header = response.xpath('//h1[@data-testid="hero__pageTitle"]')
+        l = ItemLoader(response.meta['movie'], response)
 
-        movie['title'] = header.xpath('.//span/text()').get()
-        original_title = header.xpath('.//following-sibling::div/text()').get()
-        if original_title is None:
-            movie['original_title'] = movie['title']
-        else:
-            movie['original_title'] = original_title.removeprefix('Título original: ')
+        l.add_xpath('title', '//h1[@data-testid="hero__pageTitle"]/span/text()')
+        l.add_xpath('original_title', '//h1[@data-testid="hero__pageTitle"]/following-sibling::div/text()')
+        l.add_xpath('classification', '//a[contains(@href, "/parentalguide")]/text()')
+        l.add_xpath('rating','//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()')
+        l.add_xpath('genres', '//div[@data-testid="genres"]/div[2]/a/span/text()')
         
-        classification = response.xpath('//h1[@data-testid="hero__pageTitle"]/following-sibling::ul/li/a[contains(@href, "/parentalguide")]/text()').get()
-        if classification is not None:
-            movie['classification'] = classification
-        
-        movie['rating'] = response.xpath('//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()').get()
-        movie['genres'] = response.xpath('//div[@data-testid="genres"]/div[2]/a/span/text()').getall()
-        
-        yield movie
+        yield l.load_item()
