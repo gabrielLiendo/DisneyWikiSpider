@@ -25,6 +25,12 @@ DEFAULT_REQUEST_HEADERS = {
 
 LOG_LEVEL = 'INFO'
 
+# Configure item pipelines
+# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+ITEM_PIPELINES = {
+    "DisneyWikiSpider.pipelines.MoviePipeline": 300,
+}
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
@@ -60,12 +66,6 @@ LOG_LEVEL = 'INFO'
 #    "scrapy.extensions.telnet.TelnetConsole": None,
 #}
 
-# Configure item pipelines
-# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "DisneySpider.pipelines.DisneyspiderPipeline": 300,
-#}
-
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
@@ -91,4 +91,4 @@ LOG_LEVEL = 'INFO'
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
-FEED_EXPORT_FIELDS=['title', 'original_title', 'parental_guide', 'director', 'rating', 'genres', 'duration']
+FEED_EXPORT_FIELDS=['title', 'original_title', 'parental_guide', 'director', 'imdb_rating', 'genres', 'duration']

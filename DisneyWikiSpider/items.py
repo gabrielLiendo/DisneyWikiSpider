@@ -27,7 +27,7 @@ class Movie(scrapy.Item):
     parental_guide = scrapy.Field(
         output_processor=TakeFirst()
     )
-    rating = scrapy.Field(
+    imdb_rating = scrapy.Field(
         output_processor=TakeFirst()
     )
     duration = scrapy.Field(

@@ -34,7 +34,7 @@ class MovieSpider(scrapy.Spider):
         l.add_xpath('title', '//h1[@data-testid="hero__pageTitle"]/span/text()')
         l.add_xpath('original_title', '//h1[@data-testid="hero__pageTitle"]/following-sibling::div/text()')
         l.add_xpath('parental_guide', '//a[contains(@href, "/parentalguide")]/text()')
-        l.add_xpath('rating','//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()')
+        l.add_xpath('imdb_rating','//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()')
         l.add_xpath('genres', '//div[@data-testid="genres"]/div[2]/a/span/text()')
         
         yield l.load_item()
