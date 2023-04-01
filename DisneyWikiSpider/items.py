@@ -19,7 +19,10 @@ def filter_rating(rating):
     
 def filter_minutes(time):
     m = re.search('[0-9]+', time)
-    return int(m.group())
+    if m is None:
+        return None 
+    else:
+        return int(m.group())
 
 def filter_year(release_date):
     m = re.search('\d{4}', release_date)

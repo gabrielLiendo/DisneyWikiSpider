@@ -13,6 +13,10 @@ class MovieSpider(scrapy.Spider):
                 continue
             yield scrapy.Request('https://disney.fandom.com' + link, callback=self.parse_movie)
             
+        next_list = response.xpath('//a[contains(@class, "category-page__pagination-next")]/@href').get()
+        if next_list is not None:
+            yield scrapy.Request(next_list, callback=self.parse)
+            
     def parse_movie(self, response):        
         l = ItemLoader(Movie(), response)
 
@@ -21,7 +25,6 @@ class MovieSpider(scrapy.Spider):
         l.add_xpath('year', '//div[@data-source="release"]/div/descendant::text()')
         l.add_xpath('duration', '//div[@data-source="time"]/div/text()')
         l.add_xpath('gross_revenue', '//div[@data-source="gross"]/div/text()')
-        l.add_xpath('cast', '//span[@id="Cast"]/../following-sibling::ul/li/descendant::text()')
         
         #Redirect to IMDB
         imdb_link = response.xpath('//td[@data-source="imdb_id"]/span/a/@href').get()
@@ -40,5 +43,6 @@ class MovieSpider(scrapy.Spider):
         l.add_xpath('parental_guide', '//a[contains(@href, "/parentalguide")]/text()')
         l.add_xpath('imdb_rating','//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()')
         l.add_xpath('genres', '//div[@data-testid="genres"]/div[2]/a/span/text()')
+        l.add_xpath('cast', '//a[@data-testid="title-cast-item__actor"]/text()')
         
         yield l.load_item()
