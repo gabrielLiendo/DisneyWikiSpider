@@ -8,30 +8,30 @@ import re
 from itemloaders.processors import TakeFirst, MapCompose
 
     
-def filter_original_title(title):
+def clean_original_title(title):
     return title.removeprefix('Título original: ')
 
-def filter_rating(rating):
+def clean_rating(rating):
     try:
         return float(rating.replace(',', '.'))
     except ValueError:
         return None 
     
-def filter_minutes(time):
+def clean_minutes(time):
     m = re.search('[0-9]+', time)
     if m is None:
         return None 
     else:
         return int(m.group())
 
-def filter_year(release_date):
+def clean_year(release_date):
     m = re.search('\d{4}', release_date)
     if m is None:
         return None
     else:
         return int(m.group())
 
-def filter_revenue(revenue):
+def clean_revenue(revenue):
     revenue  = revenue.replace(',', '')
     m = re.search('\$\d+(\.\d+)*', revenue)
     if m is None:
@@ -49,7 +49,7 @@ class Movie(scrapy.Item):
         output_processor=TakeFirst()
     )
     original_title = scrapy.Field(
-        input_processor=MapCompose(filter_original_title),
+        input_processor=MapCompose(clean_original_title),
         output_processor=TakeFirst()
     )
     director = scrapy.Field()
@@ -58,20 +58,21 @@ class Movie(scrapy.Item):
     )
     studio = scrapy.Field()
     imdb_rating = scrapy.Field(
-        input_processor=MapCompose(filter_rating),
+        input_processor=MapCompose(clean_rating),
         output_processor=TakeFirst()
     )
     duration = scrapy.Field(
-        input_processor=MapCompose(filter_minutes),
+        input_processor=MapCompose(clean_minutes),
         output_processor=TakeFirst()
     )
     gross_revenue = scrapy.Field(
-        input_processor=MapCompose(filter_revenue),
+        input_processor=MapCompose(clean_revenue),
         output_processor=TakeFirst()
     )
     year = scrapy.Field(
-        input_processor=MapCompose(filter_year),
+        input_processor=MapCompose(clean_year),
         output_processor=TakeFirst()
     )
     genres = scrapy.Field()
     cast = scrapy.Field()
+    awards = scrapy.Field()

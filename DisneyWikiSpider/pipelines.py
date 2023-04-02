@@ -11,6 +11,8 @@ from scrapy.exceptions import DropItem
 class MoviePipeline:
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
-        if not adapter.get('title'):
+        if not adapter.get('title') :
             raise DropItem("Missing title")
+        if not adapter.get('year') :
+            raise DropItem("Missing year")
         return item

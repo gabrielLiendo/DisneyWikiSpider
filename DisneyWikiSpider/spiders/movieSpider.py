@@ -33,6 +33,7 @@ class MovieSpider(scrapy.Spider):
             yield scrapy.Request(imdb_link, callback=self.parse_imdb, meta={'movie': l.load_item()})
         else:   
             l.add_xpath('title', '//h2[@data-source="name"]/descendant::text()')
+            l.add_xpath('original_title', '//h2[@data-source="name"]/descendant::text()')
             yield l.load_item()
         
     def parse_imdb(self, response):
@@ -44,5 +45,29 @@ class MovieSpider(scrapy.Spider):
         l.add_xpath('imdb_rating','//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()')
         l.add_xpath('genres', '//div[@data-testid="genres"]/div[2]/a/span/text()')
         l.add_xpath('cast', '//a[@data-testid="title-cast-item__actor"]/text()')
+        
+        awards_link = response.xpath('//li[@data-testid="award_information"]/a/@href').get()
+        
+        if awards_link is not None:
+            yield scrapy.Request('https://www.imdb.com/' + awards_link, callback=self.parse_awards, meta={'movie': l.load_item()})
+        else:        
+            yield l.load_item()
+    
+    def clean_award(self, award):
+        outcomes = {'Winner': 1, 'Nominee': 0}
+        
+        name = award.xpath('.//span/text()').get()
+        result = award.xpath('.//b/text()').get()
+        
+        return {'name': name, 'winner': outcomes[result]}
+        
+    def parse_awards(self, response):
+        # Parse awards list
+        award_list = response.xpath('//td[contains(@class,"title_award_outcome")]')
+        awards = [self.clean_award(award) for award in award_list]
+        
+        # Load list into Item
+        l = ItemLoader(response.meta['movie'], response)         
+        l.add_value('awards', awards)
         
         yield l.load_item()
