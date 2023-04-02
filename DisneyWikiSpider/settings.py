@@ -26,9 +26,14 @@ DEFAULT_REQUEST_HEADERS = {
 LOG_LEVEL = 'INFO'
 
 # Configure item pipelines
-# See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     "DisneyWikiSpider.pipelines.MoviePipeline": 300,
+}
+
+# Enable or disable downloader middlewares
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
 }
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -52,12 +57,6 @@ ITEM_PIPELINES = {
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
 #    "DisneySpider.middlewares.DisneyspiderSpiderMiddleware": 543,
-#}
-
-# Enable or disable downloader middlewares
-# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "DisneySpider.middlewares.DisneyspiderDownloaderMiddleware": 543,
 #}
 
 # Enable or disable extensions
@@ -91,4 +90,4 @@ ITEM_PIPELINES = {
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
-FEED_EXPORT_FIELDS=['title', 'original_title', 'parental_guide', 'studio', 'director', 'imdb_rating', 'year', 'genres', 'duration', 'gross_revenue', 'cast', 'awards']
+FEED_EXPORT_FIELDS=['title', 'original_title', 'director', 'parental_guide', 'imdb_rating', 'studio', 'characters', 'cast',  'year', 'genres', 'duration', 'gross_revenue', 'awards']

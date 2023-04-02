@@ -61,4 +61,5 @@ class Movie(scrapy.Item):
     )
     genres = scrapy.Field()
     cast = scrapy.Field()
+    characters = scrapy.Field()
     awards = scrapy.Field()
