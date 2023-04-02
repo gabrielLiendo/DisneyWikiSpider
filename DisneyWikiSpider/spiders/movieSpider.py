@@ -39,11 +39,7 @@ class MovieSpider(scrapy.Spider):
     def parse_imdb(self, response):
         l = ItemLoader(response.meta['movie'], response)
 
-        #Search again for title, year and director
-        l.add_xpath('title', '//h1[@data-testid="hero__pageTitle"]/span/text()')
-        l.add_xpath('year', '//a[contains(@href, "/releaseinfo")]/text()', re='\d{4}')
-        l.add_xpath('director', '//div[@data-testid="genres"]/following-sibling::div/div/ul/li[1]/div/ul/li/a/text()')
-        
+        l.add_xpath('title', '//h1[@data-testid="hero__pageTitle"]/span/text()')        
         l.add_xpath('original_title', '//h1[@data-testid="hero__pageTitle"]/following-sibling::div/text()', re='Título original: (.*)')
         l.add_xpath('parental_guide', '//a[contains(@href, "/parentalguide")]/text()')
         l.add_xpath('imdb_rating','//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()')
