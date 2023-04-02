@@ -13,17 +13,17 @@ class MovieSpider(scrapy.Spider):
                 continue
             yield scrapy.Request('https://disney.fandom.com' + link, callback=self.parse_movie)
             
-        next_list = response.xpath('//a[contains(@class, "category-page__pagination-next")]/@href').get()
-        if next_list is not None:
-            yield scrapy.Request(next_list, callback=self.parse)
+        #next_list = response.xpath('//a[contains(@class, "category-page__pagination-next")]/@href').get()
+        #if next_list is not None:
+        #    yield scrapy.Request(next_list, callback=self.parse)
             
     def parse_movie(self, response):        
         l = ItemLoader(Movie(), response)
 
-        l.add_xpath('director', '//div[@data-source="director"]/div/descendant::text()')
+        l.add_xpath('director', '//div[@data-source="director"]/div/descendant::text()', re='^\w+[ +\w+]*$')
         l.add_xpath('studio', '//div[@data-source="studio"]/div/descendant::text()')
-        l.add_xpath('year', '//div[@data-source="release"]/div/descendant::text()')
-        l.add_xpath('duration', '//div[@data-source="time"]/div/text()')
+        l.add_xpath('year', '//div[@data-source="release"]/div/descendant::text()', re='\d{4}')
+        l.add_xpath('duration', '//div[@data-source="time"]/div/text()', re='\d+')
         l.add_xpath('gross_revenue', '//div[@data-source="gross"]/div/text()')
         
         #Redirect to IMDB
@@ -40,7 +40,7 @@ class MovieSpider(scrapy.Spider):
         l = ItemLoader(response.meta['movie'], response)
 
         l.add_xpath('title', '//h1[@data-testid="hero__pageTitle"]/span/text()')
-        l.add_xpath('original_title', '//h1[@data-testid="hero__pageTitle"]/following-sibling::div/text()')
+        l.add_xpath('original_title', '//h1[@data-testid="hero__pageTitle"]/following-sibling::div/text()', re='Título original: (.*)')
         l.add_xpath('parental_guide', '//a[contains(@href, "/parentalguide")]/text()')
         l.add_xpath('imdb_rating','//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()')
         l.add_xpath('genres', '//div[@data-testid="genres"]/div[2]/a/span/text()')

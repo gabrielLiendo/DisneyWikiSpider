@@ -7,29 +7,17 @@ import scrapy
 import re
 from itemloaders.processors import TakeFirst, MapCompose
 
-    
-def clean_original_title(title):
-    return title.removeprefix('Título original: ')
-
-def clean_rating(rating):
+def to_int(value):
     try:
-        return float(rating.replace(',', '.'))
+        return int(value)
     except ValueError:
         return None 
-    
-def clean_minutes(time):
-    m = re.search('[0-9]+', time)
-    if m is None:
-        return None 
-    else:
-        return int(m.group())
 
-def clean_year(release_date):
-    m = re.search('\d{4}', release_date)
-    if m is None:
-        return None
-    else:
-        return int(m.group())
+def to_float(value):
+    try:
+        return float(value.replace(',', '.'))
+    except ValueError:
+        return None 
 
 def clean_revenue(revenue):
     revenue  = revenue.replace(',', '')
@@ -49,7 +37,6 @@ class Movie(scrapy.Item):
         output_processor=TakeFirst()
     )
     original_title = scrapy.Field(
-        input_processor=MapCompose(clean_original_title),
         output_processor=TakeFirst()
     )
     director = scrapy.Field()
@@ -58,11 +45,11 @@ class Movie(scrapy.Item):
     )
     studio = scrapy.Field()
     imdb_rating = scrapy.Field(
-        input_processor=MapCompose(clean_rating),
+        input_processor=MapCompose(to_float),
         output_processor=TakeFirst()
     )
     duration = scrapy.Field(
-        input_processor=MapCompose(clean_minutes),
+        input_processor=MapCompose(to_int),
         output_processor=TakeFirst()
     )
     gross_revenue = scrapy.Field(
@@ -70,7 +57,6 @@ class Movie(scrapy.Item):
         output_processor=TakeFirst()
     )
     year = scrapy.Field(
-        input_processor=MapCompose(clean_year),
         output_processor=TakeFirst()
     )
     genres = scrapy.Field()
