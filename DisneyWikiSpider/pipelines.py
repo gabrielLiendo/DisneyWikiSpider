@@ -13,6 +13,4 @@ class MoviePipeline:
         adapter = ItemAdapter(item)
         if not adapter.get('title') :
             raise DropItem("Missing title")
-        if not adapter.get('director') :
-            raise DropItem("Missing director")
         return item

@@ -20,7 +20,7 @@ class MovieSpider(scrapy.Spider):
     def parse_movie(self, response):        
         l = ItemLoader(Movie(), response)
 
-        l.add_xpath('director', '//div[@data-source="director"]/div/descendant::text()', re='^\w+[ +\w+]*$')
+        l.add_xpath('director', '//div[@data-source="director"]/div/descendant::text()', re='^\w+[ +\w+.*-]*$')
         l.add_xpath('studio', '//div[@data-source="studio"]/div/descendant::text()', re='^\w+[ +\w+]*$')
         l.add_xpath('year', '//div[@data-source="release"]/div/descendant::text()', re='\d{4}')
         l.add_xpath('duration', '//div[@data-source="time"]/div/text()', re='\d+')
@@ -42,14 +42,14 @@ class MovieSpider(scrapy.Spider):
         #Search again for title, year and director
         l.add_xpath('title', '//h1[@data-testid="hero__pageTitle"]/span/text()')
         l.add_xpath('year', '//a[contains(@href, "/releaseinfo")]/text()', re='\d{4}')
-        l.add_xpath('director', '//div[@data-testid="genres"]/following-sibling::div/div/ul/li[1]/div/ul/li/a/text()', re='^\w+[ +\w+]*$')
+        l.add_xpath('director', '//div[@data-testid="genres"]/following-sibling::div/div/ul/li[1]/div/ul/li/a/text()')
         
         l.add_xpath('original_title', '//h1[@data-testid="hero__pageTitle"]/following-sibling::div/text()', re='Título original: (.*)')
         l.add_xpath('parental_guide', '//a[contains(@href, "/parentalguide")]/text()')
         l.add_xpath('imdb_rating','//div[@data-testid="hero-rating-bar__aggregate-rating__score"]/span[1]/text()')
         l.add_xpath('genres', '//div[@data-testid="genres"]/div[2]/a/span/text()')
         l.add_xpath('cast', '//a[@data-testid="title-cast-item__actor"]/text()')
-        l.add_xpath('characters', '//a[@data-testid="cast-item-characters-link"]/span/text()', re='^\w+[ +\w+]*$')
+        l.add_xpath('characters', '//a[@data-testid="cast-item-characters-link"]/span/text()')
         
         awards_link = response.xpath('//li[@data-testid="award_information"]/a/@href').get()
         
