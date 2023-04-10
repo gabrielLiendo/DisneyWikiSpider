@@ -25,6 +25,7 @@ class MovieSpider(scrapy.Spider):
         l.add_xpath('year', '//div[@data-source="release"]/div/descendant::text()', re='\d{4}')
         l.add_xpath('duration', '//div[@data-source="time"]/div/text()', re='\d+')
         l.add_xpath('gross_revenue', '//div[@data-source="gross"]/div/text()')
+        l.add_xpath('preceded_by', '//div[@data-source="preceded"]/div/descendant::text()')
         
         #Redirect to IMDB
         imdb_link = response.xpath('//td[@data-source="imdb_id"]/span/a/@href').get()

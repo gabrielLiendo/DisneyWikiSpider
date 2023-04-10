@@ -63,3 +63,6 @@ class Movie(scrapy.Item):
     cast = scrapy.Field()
     characters = scrapy.Field()
     awards = scrapy.Field()
+    preceded_by = scrapy.Field(
+        output_processor=TakeFirst()
+    )

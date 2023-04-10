@@ -90,4 +90,6 @@ DOWNLOADER_MIDDLEWARES = {
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
-FEED_EXPORT_FIELDS=['title', 'original_title', 'director', 'parental_guide', 'imdb_rating', 'studio', 'characters', 'cast',  'year', 'genres', 'duration', 'gross_revenue', 'awards']
+FEED_EXPORT_FIELDS=['title', 'original_title', 'director', 'parental_guide', 
+                    'imdb_rating', 'studio', 'characters', 'cast',  'year', 
+                    'preceded_by', 'genres', 'duration', 'gross_revenue', 'awards']
