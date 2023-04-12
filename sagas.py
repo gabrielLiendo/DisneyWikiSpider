@@ -1,25 +1,33 @@
 import json
 
-with open('data/movies.json', 'r', encoding='utf-8') as movies_json:
-    movies = json.load(movies_json)
-    if movies is None:
-        exit(1)
+movies_json = open('data/movies.json', 'r', encoding='utf-8')
+movies = json.load(movies_json)
+movies_json.close()
 
-    sagas = dict()
+if movies is None:
+    exit(1)
 
-    for movie in movies:
-        if "preceded_by" in movie:
-            added = False
-            for saga in sagas.values():
-                if movie["preceded_by"] in saga:
-                    saga.add(movie["title"])
-                    added = True
-                    break
-            if not added:
-                sagas["Saga de " + movie["preceded_by"]] = {movie["title"], movie["preceded_by"]}
+sagas = dict()
 
-    for saga_name in sagas.keys():
-        sagas[saga_name] = list(sagas[saga_name])
+for movie in movies:
+    if "preceded_by" in movie:
+        added = False
+        for saga_name, saga in sagas.items():
+            if movie["preceded_by"] in saga:
+                saga.add(movie["title"])
+                added = True
+                movie["saga"] = saga_name
+                break
+        if not added:
+            sagas["Saga de " + movie["preceded_by"]] = {movie["title"], movie["preceded_by"]}
+            movie["saga"] = "Saga de " + movie["preceded_by"]
 
-    with open("data/sagas.json", 'w') as file:
-        json.dump(sagas, file)
+for saga_name in sagas.keys():
+    sagas[saga_name] = list(sagas[saga_name])
+
+with open("data/sagas.json", 'w') as file:
+    json.dump(sagas, file)
+
+with open("data/movies_saga.json", 'w') as file:
+    json.dump(movies, file)
+
