@@ -22,11 +22,13 @@ for movie in movies:
             sagas["Saga de " + movie["preceded_by"]] = {movie["title"], movie["preceded_by"]}
             movie["saga"] = "Saga de " + movie["preceded_by"]
 
+
+saga_list = []
 for saga_name in sagas.keys():
-    sagas[saga_name] = list(sagas[saga_name])
+    saga_list.append({"name":saga_name,  "movies": list(sagas[saga_name]) })
 
 with open("data/sagas.json", 'w') as file:
-    json.dump(sagas, file)
+    json.dump(saga_list, file)
 
 with open("data/movies_saga.json", 'w') as file:
     json.dump(movies, file)
