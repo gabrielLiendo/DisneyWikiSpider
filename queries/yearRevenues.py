@@ -14,6 +14,7 @@ q = collection_movies.aggregate([
         }
     },
     { "$sort": {"acummulated_revenue": -1} },
+    { "$limit": 1 },
 ])
 
 for record in q:
