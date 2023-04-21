@@ -5,7 +5,7 @@ client = pymongo.MongoClient("mongodb+srv://admin:admin@cluster0.jghkftl.mongodb
 db = client['disney_db']
 collection_movies = db['movies']
 
-#Mostrar el año con mayores fondos recaudados.
+# Mostrar el año con mayores fondos recaudados.
 q = collection_movies.aggregate([
     {   
         "$group": {
@@ -19,4 +19,4 @@ q = collection_movies.aggregate([
 
 for record in q:
     #print(record)
-    print("El año con mayores fondos recaudados fue", record['_id'], "con", record['acummulated_revenue'], "dolares")
+    print("El año con mayores fondos recaudados fue", record['_id'], "con", f"{ record['acummulated_revenue']:,}", "dolares")
