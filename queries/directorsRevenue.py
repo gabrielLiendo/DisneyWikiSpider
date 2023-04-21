@@ -4,7 +4,7 @@ client = pymongo.MongoClient("mongodb+srv://admin:admin@cluster0.jghkftl.mongodb
 db = client['disney_db']
 collection_movies = db['movies']
 
-#Ordenar de manera ascendente los directores y la cantidad de dinero recaudado según sus películas dirigidas
+# Ordenar de manera ascendente los directores y la cantidad de dinero recaudado según sus películas dirigidas
 q = collection_movies.aggregate([
     { "$unwind": "$director" },
     {   
@@ -17,4 +17,4 @@ q = collection_movies.aggregate([
 ])
 
 for movie in q:
-    print(movie)
+    print(movie['_id'] + ": " + str( f"{ movie['acummulated_revenue']:,}" ) +"$")
