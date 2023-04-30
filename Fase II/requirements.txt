@@ -1,0 +1,4 @@
+dnspython==2.3.0
+neo4j==5.8.0
+pymongo==4.3.3
+pytz==2023.3
